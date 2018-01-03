@@ -4,7 +4,8 @@ title: ReentrantLock(重入锁)以及公平性
 date: 2018-01-03 20:15
 tag:
 	- java
-	- 并发
+	- concurrent
+	- synchronize
 ---
 
 ## 简介
