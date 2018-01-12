@@ -12,7 +12,7 @@ tags:
 
 ## 代码解析
 
-### 线程池初始化
+### 构造参数解析
 
 通常我们使用Executors这个工厂类来快速初始化一个符合要求的线程池，其实本质都是通过不同的参数实例化ThreadPoolExecutor，下面我们通过jdk文档来了解各个参数的意思，源码如下：
 
@@ -70,13 +70,34 @@ tags:
     }
 ```
 
-1. corePoolSize： 核心线程数，如果线程池中创建了核心线程，那么他们会一直存活(即使空闲)。如果你将allowCoreThreadTimeOut设置为true的话，那么空闲的核心线程才会被终止
-2. maximumPoolSize：线程池中能持有的最大线程数
-3. keepAliveTime：超过核心线程数的那部分线程最大空闲时间
-4. unit：keepAliveTime的时间单位
-5. workQueue：持有任务的队列
-6. threadFactory：创建线程的工厂类
-7. handler：当线程执行阻塞或者容量已经到达限度时，需要执行的策略处理方式
+#### corePoolSize
+核心线程数，如果线程池中创建了核心线程，那么他们会一直存活(即使空闲)。如果你将allowCoreThreadTimeOut设置为true的话，那么空闲的核心线程才会被终止。如果你执行了prestartAllCoreThreads()，会提前启动所有核心线程。
+
+#### maximumPoolSize
+线程池中能持有的最大线程数
+
+#### keepAliveTime
+超过核心线程数的那部分线程最大空闲时间
+
+#### unit
+keepAliveTime的时间单位
+
+#### workQueue
+保存用户被执行任务的队列，现有的几种阻塞队列如下：
+1. ArrayBlockingQueue
+2. LinkedBlockingQueue
+3. SynchronousQuene
+4. PriorityBlockingQueue
+
+#### threadFactory
+创建线程的工厂类
+
+#### handler
+当线程执行阻塞或者容量已经到达限度时，需要执行的策略处理方式。现有的处理方式如下：
+1. AbortPolicy：直接抛出异常(默认策略)
+2. CallerRunsPolicy：用调用者所在的线程来执行任务
+3. DiscardOldestPolicy：去掉队列中最老的任务，再次调用ThreadPoolExecutor.execute执行该任务
+4. DiscardPolicy：直接抛弃该任务，不做任何操作
 
 ### 执行任务
 提交我们需要执行的任务通常使用ThreadPoolExecutor.execute(Runnable r)，源码如下
