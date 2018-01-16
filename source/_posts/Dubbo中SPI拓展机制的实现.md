@@ -51,10 +51,88 @@ if(objectFactory != null){
   }
 }
 ```
-上述代码可以知道，
+上述代码可以知道，往拓展点注入其他的拓展点需要满足该拓展点有对应属性的set方法，同时保证注入的其他拓展点的ExtensionLoader有adaptive适配类实例。(这个下面会解释清楚)
 
 ### 拓展点自适应
-一般来说，拓展点都有都有许多实现。
+很多时候拓展点是有多个实现的，我们需要给定一个参数来让使用者决定使用哪个拓展点，在dubbo中我们是使用com.alibaba.dubbo.common.URL来传递这样一个信息。因此，ExtensionLoader会有一个唯一的AdptiveClass(适配类)，然后通过URL这样一个变量容器来决定使用哪个具体的拓展点实现。当然，如果一个拓展点只有一个实现类，是不需要AdptiveClass的。获取适配类的方法为getAdaptiveExtension流程如下：
+![Dubbo的ExtensionLoader获取适配类流程](/assets/blogImg/Dubbo的ExtensionLoader获取适配类流程.png)
+所以，要让ExtensionLoader支持适配类，要么拓展点实现类有@Adaptive注解，要么拓展点接口方法有@Adaptive注解以及方法参数是com.alibaba.dubbo.common.URL(方法参数含有com.alibaba.dubbo.common.URL也行)。
+使用适配类依赖注入的demo如下：
+```java
+@SPI("impl1")
+public interface SimpleExt {
+    // @Adaptive example, do not specify a explicit key.
+    @Adaptive
+    String echo(URL url, String s);
+
+    @Adaptive({"key1", "key2"})
+    String yell(URL url, String s);
+
+    // no @Adaptive
+    String bang(URL url, int i);
+}
+
+public class SimpleExtImpl1 implements SimpleExt {
+    public String echo(URL url, String s) {
+        return "Ext1Impl1-echo";
+    }
+
+    public String yell(URL url, String s) {
+        return "Ext1Impl1-yell";
+    }
+
+    public String bang(URL url, int i) {
+        return "bang1";
+    }
+}
+
+public class SimpleExtImpl2 implements SimpleExt {
+    public String echo(URL url, String s) {
+        return "Ext1Impl2-echo";
+    }
+
+    public String yell(URL url, String s) {
+        return "Ext1Impl2-yell";
+    }
+
+    public String bang(URL url, int i) {
+        return "bang2";
+    }
+
+}
+
+//测试demo如下
+   @Test
+    public void test_getAdaptiveExtension_defaultAdaptiveKey() throws Exception {
+        {
+            SimpleExt ext = ExtensionLoader.getExtensionLoader(SimpleExt.class).getAdaptiveExtension();
+
+            Map<String, String> map = new HashMap<String, String>();
+            URL url = new URL("p1", "1.2.3.4", 1010, "path1", map);
+
+            String echo = ext.echo(url, "haha");
+            assertEquals("Ext1Impl1-echo", echo);
+        }
+
+        {
+            SimpleExt ext = ExtensionLoader.getExtensionLoader(SimpleExt.class).getAdaptiveExtension();
+
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("simple.ext", "impl2");
+            URL url = new URL("p1", "1.2.3.4", 1010, "path1", map);
+
+            String echo = ext.echo(url, "haha");
+            assertEquals("Ext1Impl2-echo", echo);
+        }
+    }
+```
+
+
+
+其实很容易知道，上面拓展点依赖注入的特性导致了依赖注入的其他拓展点实现一定是adaptive实例，然后根据拓展点方法开始执行时才决定使用哪一种拓展点实现。
+
 
 
 ### 拓展点自动激活
+
+这个特性是为了简化配置产生的，因为少数情况下需要获取到一些集合实现类实现链式操作，例如Filter。此时使用@Activate注解就能直接从cachedActivates获取对应class(cachedActivates在ExtensionLoader初始化的时候已经加载好，用拓展点实现的name作为key，用@Activate注解的内容作为value存储)。具体代码demo可以参考dubbo的ProtocolFilterWrapper.buildInvokerChain。
