@@ -34,7 +34,7 @@ openssl req -new -key ca_private.pem -out ca.csr -subj "/C=CN/ST=Guangdong/L=She
 	* key 指定证书私钥路径
 	* out表示输出的证书请求文件的位置
 	* subj表示证书相关的用户信息
-	
+
 3. 自签发根证书
 ```
 openssl x509 -req -days 365 [-sha1] [-extfile openssl.cnf] -extensions v3_ca -signkey ca_private.pem -in ca.csr -out ca.crt
@@ -85,4 +85,4 @@ openssl x509 -in ca.crt -out ca.pem -text
 ## 附录
 openssl文件：
 
-[file:68276156-FAE5-451D-967A-51548E40DC4D-22432-000082B32730E27F/openssl.conf]
+[下载文件](/assets/file/openssl.conf)
