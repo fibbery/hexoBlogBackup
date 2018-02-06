@@ -5,17 +5,20 @@ tags:
 	- openssl
 	- 证书
 	- https
+
 ---
 
-<!-- more -->
-
 ##环境
+
 需要安装openssl，如果没有可以使用homebrew
 ```
 brew install openssl
 ```
 
+<!-- more -->
+
 ## 操作步骤
+
 **下面所有[]中的内容代表可选项目**
 ### 生成根证书CA
 1. 生成根证书私钥

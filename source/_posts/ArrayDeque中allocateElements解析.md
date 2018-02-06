@@ -5,8 +5,6 @@ tags:
 	- java
 	- queue
 ---
-<!-- more -->
-
 jdk1.7源码如下
 
 ```java
@@ -30,6 +28,8 @@ private void allocateElements(int numElements) {
         elements = (E[]) new Object[initialCapacity];
     }
 ```
+
+<!-- more -->
 
 方法目的在于，当numElements 小于 initialCapacity的时候，直接取默认值 initialCapacity，而大于默认值的时候取 n = 2^k (k 为 32 以内的整数) ，此时 n > numElements。
 下面简单分析代码：
