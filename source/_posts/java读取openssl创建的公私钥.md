@@ -8,6 +8,8 @@ tags:
 最近在考虑使用Netty搭建HTTP/HTTPS代理服务器，遇到了openssl密钥读取问题，下面概述步骤。
 选用openssl生成密钥的初衷是netty的SslContextBuilder对其支持比较直接，相较于使用keytool更为容易读取。
 
+<!-- more -->
+
 ## 公私钥以及证书的生成
 openssl工具生成十分简单，只概叙其命令步骤
 ```shell

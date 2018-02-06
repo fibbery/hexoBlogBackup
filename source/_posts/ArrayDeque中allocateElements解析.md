@@ -5,7 +5,10 @@ tags:
 	- java
 	- queue
 ---
+<!-- more -->
+
 jdk1.7源码如下
+
 ```java
 private void allocateElements(int numElements) {
         int initialCapacity = MIN_INITIAL_CAPACITY;
