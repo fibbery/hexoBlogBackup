@@ -7,6 +7,8 @@ tags:
 ---
 jdk1.7源码如下
 
+<!-- more -->
+
 ```java
 private void allocateElements(int numElements) {
         int initialCapacity = MIN_INITIAL_CAPACITY;

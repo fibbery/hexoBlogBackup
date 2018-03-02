@@ -7,7 +7,7 @@ title: Fibbery的笔记
 subtitle:
 description: 一些开发的2B笔记
 author: Fibbery
-language:
+language: zh-Hans
 timezone:
 
 # URL
@@ -72,7 +72,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: yilia
+theme: indigo 
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -99,3 +99,8 @@ jsonContent:
     excerpt: false
     categories: false
     tags: true
+
+feed:
+  type: atom
+  path: atom.xml
+  limit: 0
