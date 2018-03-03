@@ -1,8 +1,8 @@
 ---
 title: 分析java线程池实现原理
 date: 2018-01-09 14:46:21
+categories: java
 tags:
-	- java
 	- concurrent
 ---
 ## 背景

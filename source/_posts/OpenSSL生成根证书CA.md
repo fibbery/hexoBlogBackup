@@ -1,9 +1,9 @@
 ---
 title: OpenSSL生成根证书CA
 date: 2018-02-06 10:38:49
+categories: 其他
 tags:
 	- openssl
-	- java
 	- https
 	- 证书
 ---

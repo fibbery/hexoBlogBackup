@@ -1,8 +1,8 @@
 ---
 title: ArrayDeque中allocateElements解析
 date: 2018-01-03 21:10:59
+categories: java
 tags:
-	- java
 	- queue
 ---
 jdk1.7源码如下

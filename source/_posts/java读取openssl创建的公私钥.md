@@ -1,6 +1,7 @@
 ---
 title: java读取openssl创建的公私钥
 date: 2018-01-19 18:38:12
+categories: 其他
 tags:
 	- openssl
 	- rsa
