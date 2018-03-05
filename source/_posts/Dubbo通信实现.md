@@ -1,3 +1,12 @@
+---
+title: Dubbo通信实现
+date: 2018-03-03 21:28:03
+categories: java
+tags:
+	- dubbo
+	- netty
+---
+
 ## 前提
 
 基于dubbo默认通讯服务器Netty来解析服务端和客户端如何通讯
@@ -95,7 +104,7 @@ service.echo(); //调用方法
 ```
 InvokerInvocationHandler这个类是很明显的装饰器模式，让属于Object类中的方法以及toString、hashCode、equals一些通用方法只在本地调用，实际上我们还是使用的DubboInvoker的invoker方法，也就是其中具体的doInvoke方法。代码点实现也只是使用返回的invoker对象中持有的客户端连接来发送请求消息，获取返回结果。
 > dubbo暴露方法和对远程方法的调用可以阅读源码DubboProtocolTest.testDemoProtocol来了解
-> 
+>
 
 ### 对消息的编码和解码
 上面了解到远程调用的过程实际上是本地发送请求消息，远端根据请求返回结果的一个过程，这就需要我们对传输过程中消息的编码/解码有一个清晰的认识，我们仍然用Netty作为传输层来阐明Dubbo消息的编码/解码。
