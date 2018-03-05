@@ -141,4 +141,10 @@ public class SimpleExtImpl2 implements SimpleExt {
 
 ### 拓展点自动激活
 
-这个特性是为了简化配置产生的，因为少数情况下需要获取到一些集合实现类实现链式操作，例如Filter。此时使用@Activate注解就能直接从cachedActivates获取对应class(cachedActivates在ExtensionLoader初始化的时候已经加载好，用拓展点实现的name作为key，用@Activate注解的内容作为value存储)。具体代码demo可以参考dubbo的ProtocolFilterWrapper.buildInvokerChain。
+这个特性是为了简化配置产生的，因为少数情况下需要获取到一些集合实现类实现链式操作，例如Filter。此时使用@Activate注解就能直接从cachedActivates获取对应class(cachedActivates在ExtensionLoader初始化的时候已经加载好，用拓展点实现的name作为key，用@Activate注解的内容作为value存储)。具体代码demo可以参考dubbo的ProtocolFilterWrapper.buildInvokerChain。Activate主要配合*ExtensionLoader.getActivateExtension(URL url, String key, String group)*使用，其中各个字段的释义分别如下
+
+* group : 当组名适配的时候激活当前的拓展类
+* value： 如果当前组名适配并且URL中有当前参数才能激活此拓展类
+* order：绝对顺序 
+* before：相对顺序(在某个拓展之前)
+* after：相对顺序(在某个拓展之后)
