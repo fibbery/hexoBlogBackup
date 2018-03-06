@@ -116,21 +116,22 @@ public class SimpleExtImpl2 implements SimpleExt {
 关于拓展点再com.alibaba.dubbo.common.URL中的参数名字确定是由本身类名决定的，带入如下：
 ```java
 /** ExtensionLoader.createAdaptiveExtensionClassCode()**/
- if (value.length == 0) {
-                    char[] charArray = type.getSimpleName().toCharArray();
-                    StringBuilder sb = new StringBuilder(128);
-                    for (int i = 0; i < charArray.length; i++) {
-                        if (Character.isUpperCase(charArray[i])) {
-                            if (i != 0) {
-                                sb.append(".");
-                            }
-                            sb.append(Character.toLowerCase(charArray[i]));
-                        } else {
-                            sb.append(charArray[i]);
-                        }
-                    }
-                    value = new String[]{sb.toString()};
-                }
+// value is not set, use the value generated from class name as the key
+if (value.length == 0) {
+	char[] charArray = type.getSimpleName().toCharArray();
+    StringBuilder sb = new StringBuilder(128);
+    for (int i = 0; i < charArray.length; i++) {
+    	if (Character.isUpperCase(charArray[i])) {
+        	if (i != 0) {
+            	sb.append(".");
+            }
+            sb.append(Character.toLowerCase(charArray[i]));
+        } else {
+        	sb.append(charArray[i]);
+        }
+    }
+    value = new String[]{sb.toString()};
+}
 ```
 例如SimpleExt接口，适配类会根据com.alibaba.dubbo.common.URL中参数simple.ext的值来获取对应拓展点，同时意味着注入的拓展点可以根据URL参数不同而变化。
 
