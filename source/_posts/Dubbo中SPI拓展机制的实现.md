@@ -38,31 +38,12 @@ wrappers.add(clazz);
 这种拓展类可以有很多个，可以根据实际需要新增。
 所以可以把所有拓展点的公共逻辑都置于wrapper类中，类似于aop，wrapper代理了实际需要的拓展点。
 
-### 扩展点自动注入
-injectExtension代码如下：
-```java
-//ExtensionLoader.injectExtension
-if(objectFactory != null){
-  /*判断实例中是否有set方法，该set方法满足只有一个参数并且是public的*/
-  for(Method method: instance.getClass().getMethods()){
-    if(method.getName().startWith("set") && method.getParameterTypes().length == 1
-       && Modifier.isPublic(method.getModifier())){
-      Class<?> pt = method.getParameterTypes()[0]; //获取set方法的参数类型
-      String property = method.getName().length() > 3 method.getName().substring(3,4).toLowerCase() 						+ method.getName().subtring(4) : ""; //获取该set方法的属性名字
-      Object object = objectFactory.getExtension(pt,property); //获取对应pt类型的adaptive类来注入
-      if(object != null){
-        method.invoke(instance,object);
-      }
-    }
-  }
-}
-```
-上述代码可以知道，往拓展点注入其他的拓展点需要满足该拓展点有对应属性的set方法，同时保证注入的其他拓展点的ExtensionLoader有adaptive适配类实例。(这个下面会解释清楚)
-
 ### 拓展点自适应
 很多时候拓展点是有多个实现的，我们需要给定一个参数来让使用者决定使用哪个拓展点，在dubbo中我们是使用com.alibaba.dubbo.common.URL来传递这样一个信息。因此，ExtensionLoader会有一个唯一的AdptiveClass(适配类)，然后通过URL这样一个变量容器来决定使用哪个具体的拓展点实现。当然，如果一个拓展点只有一个实现类，是不需要AdptiveClass的。获取适配类的方法为getAdaptiveExtension流程如下：
 ![Dubbo的ExtensionLoader获取适配类流程](/assets/blogImg/Dubbo的ExtensionLoader获取适配类流程.png)
-所以，要让ExtensionLoader支持适配类，要么拓展点实现类有@Adaptive注解，要么拓展点接口方法有@Adaptive注解以及方法参数是com.alibaba.dubbo.common.URL(方法参数含有com.alibaba.dubbo.common.URL也行)。
+所以，要让拓展点支持自适应，需要满足以下条件：
+1. 拓展点实现类有@Adaptive注解
+2. 拓展点接口方法有@Adaptive注解并且对应接口方法参数是com.alibaba.dubbo.common.URL或者包含com.alibaba.dubbo.common.URL属性  
 使用适配类依赖注入的demo如下：
 ```java
 @SPI("impl1")
@@ -132,12 +113,60 @@ public class SimpleExtImpl2 implements SimpleExt {
         }
     }
 ```
+关于拓展点再com.alibaba.dubbo.common.URL中的参数名字确定是由本身类名决定的，带入如下：
+```java
+/** ExtensionLoader.createAdaptiveExtensionClassCode()**/
+ if (value.length == 0) {
+                    char[] charArray = type.getSimpleName().toCharArray();
+                    StringBuilder sb = new StringBuilder(128);
+                    for (int i = 0; i < charArray.length; i++) {
+                        if (Character.isUpperCase(charArray[i])) {
+                            if (i != 0) {
+                                sb.append(".");
+                            }
+                            sb.append(Character.toLowerCase(charArray[i]));
+                        } else {
+                            sb.append(charArray[i]);
+                        }
+                    }
+                    value = new String[]{sb.toString()};
+                }
+```
+例如SimpleExt接口，适配类会根据com.alibaba.dubbo.common.URL中参数simple.ext的值来获取对应拓展点，同时意味着注入的拓展点可以根据URL参数不同而变化。
 
+### 扩展点自动注入
+injectExtension代码如下：
+```java
+//ExtensionLoader.injectExtension
+if(objectFactory != null){
+  /*判断实例中是否有set方法，该set方法满足只有一个参数并且是public的*/
+  for(Method method: instance.getClass().getMethods()){
+    if(method.getName().startWith("set") && method.getParameterTypes().length == 1
+       && Modifier.isPublic(method.getModifier())){
+      Class<?> pt = method.getParameterTypes()[0]; //获取set方法的参数类型
+      String property = method.getName().length() > 3 method.getName().substring(3,4).toLowerCase() 						+ method.getName().subtring(4) : ""; //获取该set方法的属性名字
+      Object object = objectFactory.getExtension(pt,property); //获取对应pt类型的adaptive类来注入
+      if(object != null){
+        method.invoke(instance,object);
+      }
+    }
+  }
+}
+```
+上述代码可以知道，往拓展点注入其他的拓展点需要满足以下几点：
+1. 该拓展点有set其他拓展点的方法
+2. 如果是spi注入方式的拓展，那么注入的拓展点类必须满足拓展点自适应的要求，那么可以保证注入的拓展点其实是此类拓展点的Adaptive实例。(这一点主要跟注入的拓展点的拓展方式有关，目前已知的就SpiExtensionFactory和SpringExtensionFactory，意味着除了能注入spi拓展还能注入spring容器中的对象)  
 
-
-其实很容易知道，上面拓展点依赖注入的特性导致了依赖注入的其他拓展点实现一定是adaptive实例，然后根据拓展点方法开始执行时才决定使用哪一种拓展点实现。
-
-
+对于第二点，我们可以深挖代码来解答，代码顺序如下：
+```java
+/** ExtensionLoader.injectExtension**/
+Object object = objectFactory.getExtension(pt,property);
+		||
+/** AdaptiveExtensionFactory.getExtension **/
+T extension = factory.getExtension(type,name)
+		||
+SpringExtensionFactory.getExtension()/SpiExtensionFactory
+```
 
 ### 拓展点自动激活
 
