@@ -118,7 +118,7 @@ public class SimpleExtImpl2 implements SimpleExt {
 /** ExtensionLoader.createAdaptiveExtensionClassCode()**/
 // value is not set, use the value generated from class name as the key
 if (value.length == 0) {
-	char[] charArray = type.getSimpleName().toCharArray();
+    char[] charArray = type.getSimpleName().toCharArray();
     StringBuilder sb = new StringBuilder(128);
     for (int i = 0; i < charArray.length; i++) {
     	if (Character.isUpperCase(charArray[i])) {
