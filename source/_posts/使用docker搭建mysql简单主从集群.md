@@ -29,7 +29,7 @@ log_bin                  = mysql-bin
 binlog-format            = ROW
 lower_case_table_names   = 1
 ```
-需要注意下mysql镜像自带是有配置文件的，我们映射过来的文件夹并不能完全覆盖，所以不要让配置文件冲突
+​	需要注意下mysql镜像自带是有配置文件的，我们映射过来的文件夹并不能完全覆盖，所以不要让配置文件冲突
 
 3. 重启容器
 ```
@@ -46,7 +46,7 @@ flush privileges
 ```
 show master status
 ```
-记录下file和position，等到设置从库时需要
+​	记录下file和position，等到设置从库时需要
 
 #### 建立从库容器
 1. 建立从数据库(使用link实现从库连接主库)
@@ -68,7 +68,7 @@ relay-log              = slave-relay-bin
 relay-log-index        = slave-relay-bin.index
 read-only              = 1
 ```
-log-slave-updates参数的意义在于，如果该库是从库，从主库binlog读取的更新是不会继续写入该库的binlog，设置该参数后则可以实现读取主库binlog之后写入自己库的binlog，用来做其他从库的主库
+​	log-slave-updates参数的意义在于，如果该库是从库，从主库binlog读取的更新是不会继续写入该库的binlog，设置		该参数后则可以实现读取主库binlog之后写入自己库的binlog，用来做其他从库的主库
 
 3. 重启容器
 ```
@@ -81,12 +81,14 @@ CHANGE MASTER TO MASTER_HOST='master',MASTER_USER='sync', MASTER_PASSWORD='sync'
 flush privileges
 start slave
 ```
-这里设置的值master_log_file以及master_log_pos根据当初查询主库得来
+​	这里设置的值master_log_file以及master_log_pos根据当初查询主库得来	
 
 5. 查看从库状态
 ```
 show slave status\G
 ```
+
+
 
 至此简单的mysql的主从集群搭建完成
 
