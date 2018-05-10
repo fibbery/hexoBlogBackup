@@ -1,6 +1,7 @@
 ---
 title: 使用docker搭建mysql双主配置
 date: 2018-05-10 10:23:53
+categories: mysql
 tags:
     - mysql
     - docker
