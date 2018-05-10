@@ -1,6 +1,7 @@
 ---
 title: 使用docker搭建mysql简单主从集群
 date: 2018-05-09 20:32:37
+categories: mysql
 tags:
 	- mysql
 	- docker
