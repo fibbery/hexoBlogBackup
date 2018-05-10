@@ -46,7 +46,7 @@ mysql镜像版本5.7(这里我直接下载的标签为latest的最新版本)
 
     ```sql
         grant replication slave on *.* to 'sync'@'%' identified by 'sync'
-    flush privileges
+        flush privileges
     ```
 
 5. 查询下主库当前binlog情况
@@ -96,7 +96,7 @@ mysql镜像版本5.7(这里我直接下载的标签为latest的最新版本)
         start slave
     ```
 
-    这里设置的值master_log_file以及master_log_pos根据当初查询主库得来	
+    这里设置的值master_log_file以及master_log_pos根据当初查询主库得来
 
 5. 查看从库状态
 
