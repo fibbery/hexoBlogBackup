@@ -31,7 +31,7 @@ insert into Record(user_id,object_id,create_time) values(1,1,now()) on duplicate
 ```
 
 查了[MySQL Reference](https://dev.mysql.com/doc/refman/5.7/en/insert-on-duplicate.html)可以发现是有对affected rows 进行说明的，内容如下:
->With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row is inserted as a new row, 2 if an existing row is updated, and 0 if an existing row is set to its current values. If you specify the CLIENT_FOUND_ROWS flag to the mysql_real_connect() C API function when connecting to mysqld, the affected-rows value is 1 (not 0) if an existing row is set to its current values.    
+>With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row is inserted as a new row, 2 if an existing row is updated, and 0 if an existing row is set to its current values. If you specify the CLIENT_FOUND_ROWS flag to the mysql_real_connect() C API function when connecting to mysqld, the affected-rows value is 1 (not 0) if an existing row is set to its current values.  
 
 也就是说当无主键冲突的时候affected row = 1；主键冲突的时候回去自定义更新记录 affected rows = 2；主键冲突但是自定义更新的值和原有值相同的时候affected rows = 0。如果mysql的参数CLIENT_FOUND_ROWS是设置成mysql_real_connect()，那么这种情况下也会返回1。那么问题很明显了，因为我们设置create_time是秒级别的，那么肯定存在一种情况，在你使用api连接mysql的时候加上参数CLIENT_FOUND_ROWS，在同一秒内A事务插入了一条记录返回affected rows = 1,B事务去执行更新的时候由于更新值和当前值相同导致返回affected rows = 1。
 
