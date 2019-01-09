@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://jiangnenghua.github.io
+url: https://fibbery.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -78,7 +78,7 @@ theme: indigo
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/jiangnenghua/jiangnenghua.github.io.git
+  repo: https://github.com/fibbery/fibbery.github.io.git
   branch: master
 
 jsonContent:
