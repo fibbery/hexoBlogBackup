@@ -10,6 +10,8 @@ tags:
 
 互联网架构需要保证数据库高可用，常见的一种方式，使用双主同步+keepalived+虚ip的方式保证数据库的可用性。依照前文[使用docker搭建mysql简单主从集群](https://fibbery.me/2018/05/09/%E4%BD%BF%E7%94%A8docker%E6%90%AD%E5%BB%BAmysql%E7%AE%80%E5%8D%95%E4%B8%BB%E4%BB%8E%E9%9B%86%E7%BE%A4/) 想尝试一下使用docker搭建会有什么问题
 
+
+<!-- more-->
 ## 实践步骤
 
 1. 搭建好docker网络

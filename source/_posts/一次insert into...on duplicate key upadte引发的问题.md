@@ -10,6 +10,8 @@ tags:
 
   最近有业务场景使用insert into ... on duplicate key update进行插入更新操作，然后通过返回的affected rows来确定是进行了插入操作还是更新操作。印象中当不出现键冲突的时候affected rows应该为1（作用等同于insert into）, 而当键冲突的时候affected rows应该为2。但是实际情况是有键位冲突更新的时候affected rows返回的是1。  
 
+
+<!-- more -->
 ## 解决思路
 
   首先我们梳理下表结构以及执行语句，业务表的设计大致如下：
