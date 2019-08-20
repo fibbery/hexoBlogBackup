@@ -1,7 +1,7 @@
 ---
 title: 一次insert into on duplicate key upadte引发的问题
 date: 2019-01-09 17:05:51
-categories: mysql
+categories: 学习笔记
 tags:
     - mysql
 ---
@@ -16,7 +16,7 @@ tags:
 
   首先我们梳理下表结构以及执行语句，业务表的设计大致如下：
 
-```sql
+```SQL
 create table Record(
     id int auto_increment primary key,
     user_id int not null comment '用户id',
@@ -28,7 +28,7 @@ create table Record(
 
 实际执行的业务操作语句如下:
 
-```sql
+```SQL
 insert into Record(user_id,object_id,create_time) values(1,1,now()) on duplicate key update set create_time = now()
 ```
 
@@ -49,7 +49,7 @@ Since version: 5.1.7
 
 直接在库中执行
 
-```mysql
+```SQL
 insert into `Record`(`user_id`,`object_id`,`create_time`) values(1,1,'2019-1-9 19:03:33') on duplicate key update create_time = '2019-1-9 19:03:33'
 ```
 

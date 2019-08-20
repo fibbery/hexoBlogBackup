@@ -1,8 +1,9 @@
 ---
 title: Dubbo中SPI拓展机制的实现
 date: 2018-01-15 23:09:56
-categories: java
+categories: 学习笔记
 tags:
+    - java
 	- dubbo
 	- spi
 
@@ -24,7 +25,7 @@ dubbo在原有的基础上拓展了以下几点：
 通过上图流程可以分析出拓展点的以下属性
 ### 拓展点自动包装
 自动包装拓展的wrapper类也是拓展点的实现类，ExtensionLoader在加载拓展点的时候，会将拥有该类型的构造函数的拓展点当做wrapper类。代码如下：
-```java
+```JAVA
 //代码点ExtensionLoader.loadFile()
 clazz.getConstructor(type);
 Set<Class<?>> wrappers = cacheWrapperClasses;
@@ -45,7 +46,7 @@ wrappers.add(clazz);
 1. 拓展点实现类有@Adaptive注解
 2. 拓展点接口方法有@Adaptive注解并且对应接口方法参数是com.alibaba.dubbo.common.URL或者包含com.alibaba.dubbo.common.URL属性  
 使用适配类依赖注入的demo如下：
-```java
+```JAVA
 @SPI("impl1")
 public interface SimpleExt {
     // @Adaptive example, do not specify a explicit key.
@@ -114,7 +115,7 @@ public class SimpleExtImpl2 implements SimpleExt {
     }
 ```
 关于拓展点再com.alibaba.dubbo.common.URL中的参数名字确定是由本身类名决定的，带入如下：
-```java
+```JAVA
 /** ExtensionLoader.createAdaptiveExtensionClassCode()**/
 // value is not set, use the value generated from class name as the key
 if (value.length == 0) {
@@ -137,7 +138,7 @@ if (value.length == 0) {
 
 ### 扩展点自动注入
 injectExtension代码如下：
-```java
+```JAVA
 //ExtensionLoader.injectExtension
 if(objectFactory != null){
   /*判断实例中是否有set方法，该set方法满足只有一个参数并且是public的*/
@@ -159,7 +160,7 @@ if(objectFactory != null){
 2. 如果是spi注入方式的拓展，那么注入的拓展点类必须满足拓展点自适应的要求，那么可以保证注入的拓展点其实是此类拓展点的Adaptive实例。(这一点主要跟注入的拓展点的拓展方式有关，目前已知的就SpiExtensionFactory和SpringExtensionFactory，意味着除了能注入spi拓展还能注入spring容器中的对象)  
 
 对于第二点，我们可以深挖代码来解答，代码顺序如下：
-```java
+```JAVA
 /** ExtensionLoader.injectExtension**/
 Object object = objectFactory.getExtension(pt,property);
 		||

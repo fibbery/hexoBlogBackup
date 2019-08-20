@@ -1,7 +1,7 @@
 ---
 title: OpenSSL生成根证书CA
 date: 2018-02-06 10:38:49
-categories: 其他
+categories: 学习笔记
 tags:
 	- openssl
 	- https
@@ -11,7 +11,7 @@ tags:
 ## 准备环境
 本机Mac，所以只讨论Mac环境下的生成方法。
 需要安装openssl，如果没有可以使用homebrew安装。
-```shell
+```SHELL
 brew install openssl
 ```
 <!-- more -->
@@ -21,7 +21,7 @@ brew install openssl
 
 ### 生成根证书CA
 #### 1)生成根证书私钥  
-```shell
+```SHELL
 openssl genrsa [-aes256] -out ca_private.pem 2048
 ```
 含义：
@@ -30,7 +30,7 @@ openssl genrsa [-aes256] -out ca_private.pem 2048
 * -aes256表示使用256位的AES算法对密钥进行加密，另外还有des3
 
 #### 2)生成根证书请求文件  
-```shell
+```SHELL
 openssl req -new -key ca_private.pem -out ca.csr -subj "/C=CN/ST=Guangdong/L=Shenzhen/O=Zhenai/OU=Java/CN=HttpProxy"
 ```
 含义：
@@ -41,7 +41,7 @@ openssl req -new -key ca_private.pem -out ca.csr -subj "/C=CN/ST=Guangdong/L=She
 * subj表示证书相关的用户信息
 
 #### 3)自签发根证书  
-```shell
+```SHELL
 openssl x509 -req -days 365 [-sha1] [-extfile openssl.cnf] [-extensions v3_ca] -signkey ca_private.pem -in ca.csr -out ca.crt
 ```
 含义：
@@ -58,15 +58,15 @@ openssl x509 -req -days 365 [-sha1] [-extfile openssl.cnf] [-extensions v3_ca] -
 ### 用根证书签发server端证书
 
 #### 1)生成服务端私钥
-```shell
+```SHELL
 openssl genrsa -out server_private.pem 2048
 ```
 #### 2)生成证书请求文件
-```shell
+```SHELL
 openssl req -new -key server_private.pem -out server.csr -subj "/C=CN/ST=Guangdong/L=Shenzhen/O=Zhenai/OU=Java/CN=HttpProxy"
 ```
 #### 3)利用根证书签发服务端证书
-```shell
+```SHELL
 openssl x509 -req -days 365 [-sha256] [-extfile openssl.conf] [-extensions v3_req] -CA ca.crt -CAkey ca_private.pem -CAserial ca.srl -CAcreateserial -in server.csr -out server.crt
 ```
 含义：
@@ -78,11 +78,11 @@ openssl x509 -req -days 365 [-sha256] [-extfile openssl.conf] [-extensions v3_re
 
 ## 注意要点
 1. 上面过程中生成的私钥是不能直接被java读取的，只能通过下述命令转换一下：
-```shell
+```SHELL
 openssl pkcs8 -topk8 -nocrypt -inform PEM -outform PEM -in ca_private.pem  -out ca_private_pkcs8.pem
 ```
 2.  curl使用证书的时候必须是pem格式的，crt到pem格式转换如下
-```shell
+```SHELL
 openssl x509 -in ca.crt -out ca.pem -text
 ```
 

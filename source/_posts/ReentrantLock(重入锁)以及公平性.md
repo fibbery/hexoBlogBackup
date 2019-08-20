@@ -2,8 +2,9 @@
 layout: post
 title: ReentrantLock(重入锁)以及公平性
 date: 2018-01-03 20:15
-categories: java
+categories: 学习笔记
 tag:
+    - java
 	- concurrent
 	- synchronize
 ---

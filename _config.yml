@@ -7,7 +7,7 @@ title: 小笔记本
 subtitle: 好风凭借力，送我上青云
 description: 一些开发的2B笔记
 author: Fibbery
-language: zh-Hans
+language: zh-CN
 timezone:
 
 # URL
@@ -41,7 +41,7 @@ highlight:
   enable: true
   line_number: true
   auto_detect: false
-  tab_replace:
+  tab_replace: true
   
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -72,7 +72,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: even
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -104,3 +104,20 @@ feed:
   type: atom
   path: atom.xml
   limit: 0
+
+# search
+algolia:
+  applicationID: 'DA3PID79SP'
+  adminApiKey: 'b9e15927cbae39f7d351b6473fdd3c6f'
+  apiKey: '9708e54cffa2422172583ac9329b544e'
+  indexName: 'blog'
+  chunkSize: 5000
+  fields:
+    - content:strip:truncate,0,500
+    - excerpt:strip
+    - gallery
+    - permalink
+    - photos
+    - slug
+    - tags
+    - title

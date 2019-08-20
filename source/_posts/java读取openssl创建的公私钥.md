@@ -1,7 +1,7 @@
 ---
 title: java读取openssl创建的公私钥
 date: 2018-01-19 18:38:12
-categories: 其他
+categories: 学习笔记
 tags:
 	- openssl
 	- rsa
@@ -13,7 +13,7 @@ tags:
 
 ## 公私钥以及证书的生成
 openssl工具生成十分简单，只概叙其命令步骤
-```shell
+```SHELL
 # 生成私钥
 1. openssl genrsa -out rsa_private_key.pem 1024
 # 根据私钥生成公钥
@@ -41,7 +41,7 @@ f3iHyXNfo12Y7bjbbwIDAQAB
 可以看出导出的文本都是Base64编码的字符串，我们只需要读入有效字符串，然后实例化成具体实体即可。
 
 1. 读取文本字符串
-```java
+```JAVA
 private static String readKeyStr(InputStream in) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         StringBuilder buffer = new StringBuilder();
@@ -55,11 +55,11 @@ private static String readKeyStr(InputStream in) throws Exception {
     }
 ```
 2. base64解码成真正的密钥字符
-```java
+```JAVA
  byte[] bytes = Base64.getDecoder().decode(readKeyStr(in));
 ```
 3. 实例化成具体密钥实体
-```java
+```JAVA
  public static RSAPublicKey loadPublicKey(InputStream in) throws Exception {
         byte[] bytes = Base64.getDecoder().decode(readKeyStr(in));
         KeyFactory factory = KeyFactory.getInstance("rsa");

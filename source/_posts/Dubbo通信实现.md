@@ -1,10 +1,11 @@
 ---
 title: Dubbo通信实现
 date: 2018-03-03 21:28:03
-categories: java
+categories: 学习笔记
 tags:
 	- dubbo
-	- netty
+    - netty
+    - java
 ---
 
 ## 前提
@@ -18,7 +19,7 @@ tags:
 
 首先我们看下协议接口类Protocol中暴露服务的方法
 
-```java
+```JAVA
 /**
  * 暴露远程调用服务：
  * 1. 该通信协议必须在接到请求之后记录请求的源地址：
@@ -42,7 +43,7 @@ export ---> openServer ---> createServer --->  Exchangers.bind(url,handler)
 openServer根据invoker携带的URL信息获取host以及ip，如果已经存在，则不会创建服务。
 然后我们继续看下*Exchanger*的实现
 
-```java
+```JAVA
  public static ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException {
         if (url == null) {
             throw new IllegalArgumentException("url == null");
@@ -57,7 +58,7 @@ openServer根据invoker携带的URL信息获取host以及ip，如果已经存在
 
 *getExchanger(url)*典型的策略模式，得到HeaderExchanger，代码如下
 
-```java
+```JAVA
  public ExchangeServer bind(URL url, ExchangeHandler handler) throws RemotingException {
         return new HeaderExchangeServer(Transporters.bind(url, new DecodeHandler(new HeaderExchangeHandler(handler))));
     }
@@ -73,7 +74,7 @@ openServer根据invoker携带的URL信息获取host以及ip，如果已经存在
 
 我们看下Protocol中引用服务的方法
 
-```java
+```JAVA
    /**
      * 引用远程服务
      * 1.当使用者调用invoker(通信协议使用refer方法生成)的invoke方法的时候，通信协议
@@ -90,25 +91,26 @@ openServer根据invoker携带的URL信息获取host以及ip，如果已经存在
 @Adaptive
 <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException;
 ```
+
 我们还是通过DubboProtocol来看客户端如何实现远程调用，refer方法在初始的时候会初始化一个与对应远端的连接，同时返回持有这个连接的对象invoker。我们需要将其转换成对应需要使用的服务类，在这里就需要用到动态代理这样的一个方式来生成一个本地句柄，以便客户端像调用本地服务一样调用。所以，一般客户端使用如下(伪码)：
-```java
+
+```JAVA
 ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
 DemoService service = proxyFactory.getProxy(refer(type,url)); //本地生成代理类
 service.echo(); //调用方法
 ```
+
 接下来我们具体看JavassistProxyFactory是怎么生成一个客户端需要的代理类的，代码如下：
-```java
+
+```JAVA
    public <T> T getProxy(Invoker<T> invoker, Class<?>[] interfaces) {
         return (T) Proxy.getProxy(interfaces).newInstance(new InvokerInvocationHandler(invoker));
     }
 ```
+
 InvokerInvocationHandler这个类是很明显的装饰器模式，让属于Object类中的方法以及toString、hashCode、equals一些通用方法只在本地调用，实际上我们还是使用的DubboInvoker的invoker方法，也就是其中具体的doInvoke方法。代码点实现也只是使用返回的invoker对象中持有的客户端连接来发送请求消息，获取返回结果。
 > dubbo暴露方法和对远程方法的调用可以阅读源码DubboProtocolTest.testDemoProtocol来了解
->
 
-### 对消息的编码和解码
-上面了解到远程调用的过程实际上是本地发送请求消息，远端根据请求返回结果的一个过程，这就需要我们对传输过程中消息的编码/解码有一个清晰的认识，我们仍然用Netty作为传输层来阐明Dubbo消息的编码/解码。
-1. 
 
 
 

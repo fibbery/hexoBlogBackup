@@ -1,15 +1,16 @@
 ---
 title: ArrayDeque中allocateElements解析
 date: 2018-01-03 21:10:59
-categories: java
+categories: 学习笔记
 tags:
+    - java
 	- queue
 ---
 jdk1.7源码如下
 
 <!-- more -->
 
-```java
+```JAVA
 private void allocateElements(int numElements) {
         int initialCapacity = MIN_INITIAL_CAPACITY;
         // Find the best power of two to hold elements.

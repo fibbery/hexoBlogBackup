@@ -1,7 +1,7 @@
 ---
 title: 使用docker搭建mysql双主配置
 date: 2018-05-10 10:23:53
-categories: mysql
+categories: 学习笔记
 tags:
     - mysql
     - docker
@@ -17,20 +17,20 @@ tags:
 1. 搭建好docker网络
     因为需要两个容器互联，所以需要使用docker连创建互联网络，参见[用network create解决Docker容器互相连接的问题](http://www.up4dev.com/2016/10/09/docker-network-create/)
     
-    ```shell
+    ```SHELL
         docker network create my-net  # 先创建一个网络
         docker network ls # 查看一下是否创建成功
     ```
 
 2. 新建masterA库
 
-    ```shell
+    ```SHELL
          docker run -d -p 3306:3306 -v /data/mysqlcnf/masterA:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name masterA --net=my-net --net-alias=masterA mysql   # 利用自建网络搭建主库A
     ```
 
     数据库配置文件如下:
 
-    ```shell
+    ```SHELL
         server-id                = 1
         auto_increment_offset    = 1
         auto_increment_increment = 1
@@ -47,18 +47,18 @@ tags:
 
     重启masterA库
 
-    ```shell
+    ```SHELL
         docker restart masterA
     ```
 3. 新建masterB 主库
 
-    ```shell
+    ```SHELL
         docker run -d -p 3307:3306 -v /data/mysqlcnf/masterB:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name masterB --net=my-net --net-alias=masterB mysql  # 利用自建网络搭建主库B
     ```
 
     数据库配置文件如下:
 
-    ```shell
+    ```SHELL
         [mysqld]
         server-id                = 2
         auto_increment_offset    = 2
@@ -74,7 +74,7 @@ tags:
 
     重启B库
 
-    ```shell
+    ```SHELL
         docker restart masterB
     ```
 

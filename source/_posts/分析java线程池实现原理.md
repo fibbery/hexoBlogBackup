@@ -1,8 +1,9 @@
 ---
 title: 分析java线程池实现原理
 date: 2018-01-09 14:46:21
-categories: java
+categories: 学习笔记
 tags:
+    - java
 	- concurrent
 ---
 ## 背景
@@ -16,7 +17,7 @@ tags:
 
 通常我们使用Executors这个工厂类来快速初始化一个符合要求的线程池，其实本质都是通过不同的参数实例化ThreadPoolExecutor，下面我们通过jdk文档来了解各个参数的意思，源码如下：
 
-```java
+```JAVA
  /**
      * Creates a new {@code ThreadPoolExecutor} with the given initial
      * parameters.
@@ -101,7 +102,7 @@ keepAliveTime的时间单位
 
 ### 执行任务
 提交我们需要执行的任务通常使用ThreadPoolExecutor.execute(Runnable r)，源码如下
-```java
+```JAVA
 public void execute(Runnable command) {
         if (command == null)
             throw new NullPointerException();

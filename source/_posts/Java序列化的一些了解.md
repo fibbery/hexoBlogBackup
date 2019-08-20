@@ -1,9 +1,10 @@
 ---
 title: Java序列化的一些了解
 date: 2018-03-06 23:53:54
-categories: java
+categories: 学习笔记
 tags:
-	- serializable
+    - java
+    - serializable
 ---
 
 ## 引言
@@ -12,7 +13,7 @@ tags:
 
 ## 具体实现
 我们通过Demo来了解Java序列化和反序列化的具体情况，代码如下：
-```java
+```JAVA
 public class Test implements Serializable{
 
     private static final long serialVersionUID = -7303637756547202487L;
@@ -41,7 +42,7 @@ public class Test implements Serializable{
 3. Java 序列化机制为了节省磁盘空间，具有特定的存储规则，当写入文件的为同一对象时，并不会再将对象的内容进行存储，而只是再次存储一份引用。
 
 根据第三点使用Demo详细说明下：
-```java
+```JAVA
 public class Reference implements Serializable {
 
     private static final long serialVersionUID = -8386243968193725155L;

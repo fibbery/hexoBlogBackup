@@ -1,7 +1,7 @@
 ---
 title: 使用docker搭建mysql简单主从集群
 date: 2018-05-09 20:32:37
-categories: mysql
+categories: 学习笔记
 tags:
 	- mysql
 	- docker
@@ -23,13 +23,13 @@ mysql镜像版本5.7(这里我直接下载的标签为latest的最新版本)
 
 1. 建立主数据库
 
-    ```shell
+    ```SHELL
         docker run -d -p 3307:3306 -v /data/mysqlcnf/master:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name master mysql
     ```
 
 2. 在本机目录/data/mysqlcnf/master中新建mysql数据库配置文件my.cnf，内容如下:
 
-    ```shell
+    ```SHELL
         [mysqld]
         server-id                = 1
         log_bin                  = mysql-bin
@@ -40,20 +40,20 @@ mysql镜像版本5.7(这里我直接下载的标签为latest的最新版本)
 
 3. 重启容器
 
-    ```shell
+    ```SHELL
         docker restart master
     ```
 
 4. 建立授权帐号
 
-    ```sql
+    ```SQL
         grant replication slave on *.* to 'sync'@'%' identified by 'sync'
         flush privileges
     ```
 
 5. 查询下主库当前binlog情况
 
-    ```sql
+    ```SQL
         show master status
     ```
 
@@ -63,13 +63,13 @@ mysql镜像版本5.7(这里我直接下载的标签为latest的最新版本)
 
 1. 建立从数据库(使用link实现从库连接主库)
 
-    ```shell
+    ```SHELL
         docker run -d -p 3307:3306 -v /data/mysqlcnf/slave:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 --name slave --link master:master mysql
     ```
 
 2. 从库配置文件
 
-    ```shell
+    ```SHELL
         [mysqld]
         server-id              = 2
 
@@ -86,13 +86,13 @@ mysql镜像版本5.7(这里我直接下载的标签为latest的最新版本)
 
 3. 重启容器
 
-    ```shell
+    ```SHELL
         docker restart slave
     ```
 
 4. 登录从库服务器设置主库
 
-    ```sql
+    ```SQL
         CHANGE MASTER TO MASTER_HOST='master',MASTER_USER='sync', MASTER_PASSWORD='sync',MASTER_LOG_FILE='mysql-bin.000005', MASTER_LOG_POS=154;
         flush privileges
         start slave
@@ -102,7 +102,7 @@ mysql镜像版本5.7(这里我直接下载的标签为latest的最新版本)
 
 5. 查看从库状态
 
-    ```sql
+    ```SQL
         show slave status\G
     ```
 
