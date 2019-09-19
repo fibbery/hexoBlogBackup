@@ -39,8 +39,9 @@ java为什么能”一次编译，多次运行“，因为java在任何环境�
 #### 自带工具类
 上述方式对我们看字节码具体内容并不是十分友好，所以自带的工具类javap可以让我们十分便利的通过字节码文件了解到类的实现细节。javap使用help如下：
 ![javap help](/assets/blogImg/javapusage.jpg)
-我们通过```javap -v Hello.class```可以得到如下结果：
-```
+我们通过javap -v Hello.class可以得到如下结果：
+
+```java
 Classfile /Users/fibbery/Documents/workspace/demo/src/main/java/com/fibbery/demo/jvm/Hello.class
   Last modified 2019-9-19; size 518 bytes
   MD5 checksum d28a8ac83ec1ee573714d295476cf07b
@@ -115,7 +116,6 @@ Constant pool:
             0       9     0  args   [Ljava/lang/String;
 }
 SourceFile: "Hello.java"
-
 ```
 
 #### 其他工具类
