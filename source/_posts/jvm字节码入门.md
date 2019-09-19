@@ -167,3 +167,7 @@ JDK1.5支持静态Instrumentation，具体实现是在jvm启动时候添加一�
 JDK1.6就支持更强大的动态Instrumentation，在JVM 启动后通过 Attach API 远程加载代理包到应用上，这种称为agentmain。
 
 
+## 参考
+[Oracle:The class File Format](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4)
+[Oracle:The Java Virtual Machine Instruction Set](https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-6.html)
+[Java字节码增强揭秘](https://juejin.im/post/5d773ae1518825058772843c#heading-18)
